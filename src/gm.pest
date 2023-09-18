@@ -1,22 +1,15 @@
-WHITESPACE = _{ " " | "\r" | "\n" | "\t" }
-
 document = { SOI ~ element+ ~ EOI }
-
-
-element = {
-    element_kind ~ attribute_map? ~ "{" ~ content* ~ "}"
-}
+element  = { element_kind ~ attribute_map? ~ content }
 
 element_kind = ${ "~" ~ ident }
-ident = ${ ASCII_ALPHANUMERIC ~ (ASCII_ALPHANUMERIC | "-")* }
+ident        = ${ ASCII_ALPHANUMERIC ~ (ASCII_ALPHANUMERIC | "-")* }
 
-attribute_map = {
+attribute_map =  {
     "(" ~ ")"
   | "(" ~ attribute ~ ("," ~ attribute)* ~ ")"
 }
-attribute = {
-    ident ~ ":" ~ string
-}
+attribute     = @{ ident ~ WHITESPACE* ~ ":" ~ WHITESPACE* ~ string }
+WHITESPACE = _{ " " | "\r" | "\n" | "\t" }
 
 string = ${ "\"" ~ inner ~ "\"" }
 inner  = @{ char* }
@@ -26,6 +19,13 @@ char   =  {
   | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
 }
 
-content = {
-	(element|ASCII_ALPHANUMERIC+)
+content       = ${
+    "{" ~ "}"
+  | "{" ~ (element | content_inner)+ ~ "}"
+}
+content_inner = @{ content_char+ }
+content_char  =  {
+    !("{" | "}" | "~" | "\\") ~ ANY
+  | "\\" ~ ("{" | "}" | "~" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+  | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
 }
