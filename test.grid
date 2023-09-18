@@ -1,0 +1,9 @@
+~html(lang: "en"){
+  ~h1(id: "hello"){hello world}
+  ~p{this is a grid example}
+  ~br{}
+  ~div(class: "arbitrary"){
+     ~p{is this the real life}
+     ~p{or is this ~b{fantasy}}
+  }
+}
