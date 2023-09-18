@@ -1,0 +1,7 @@
+<node>       ::= <node-kind> <attributes> <content>
+<node-kind>  ::= "~"<word>
+<attributes> ::= "("<attr> <attr-tail>")"
+<attr>       ::= <word> ":" "\""[<word>]"\""
+<attr-tail>  ::= ["," <attrs>]
+<content>    ::= "{" [<plaintext> | <node>] "}"
+<plaintext>  ::= [<word>]

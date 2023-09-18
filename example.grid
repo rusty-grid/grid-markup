@@ -1,0 +1,10 @@
+~html(lang:en){
+    ~meta{
+        ~title{ server postbacks using hyperlisp }
+    }
+
+    ~body{
+        ~h1{ Hello, World }
+        ~p{ This is a simple MVP for grid-markup }
+    }
+}
