@@ -1,12 +1,7 @@
-use pest::Parser;
-use pest_derive::Parser;
-
-#[derive(Parser)]
-#[grammar = "gm.pest"]
-struct GridParser;
-
-fn main() {
-    let unparsed_file =
-        std::fs::read_to_string(std::env::args().nth(1).unwrap()).expect("cannot read file");
-    dbg!(GridParser::parse(Rule::document, &unparsed_file));
+mod parser;
+fn main() -> anyhow::Result<()> {
+    let path = std::env::args().nth(1).expect("missing file path");
+    let contents = std::fs::read_to_string(path)?;
+    dbg!(parser::parse_str(&contents));
+    Ok(())
 }
