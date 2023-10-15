@@ -9,7 +9,7 @@ use std::collections::HashMap;
 #[grammar = "gm.pest"]
 pub struct GridParser;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Node<'a> {
     Element {
         kind: ElementKind,
@@ -19,7 +19,7 @@ pub enum Node<'a> {
     RawText(&'a str),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum ElementKind {
     Html,
     H1,
@@ -113,5 +113,47 @@ fn build_attributes(pair: pest::iterators::Pair<'_, Rule>) -> Option<HashMap<&st
             Some(map)
         }
         x => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::parser::{parse_str, ElementKind, Node};
+
+    #[test]
+    #[ignore = "not implemented"]
+    fn normal_text() {
+        let actual = parse_str("normal text\nhello\nmultiline").unwrap();
+
+        let expected = Node::RawText("normal text\nhello\nmultiline");
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn simple_element() {
+        let actual = parse_str("~h1 { Hello There.\nHow are you doing today? }").unwrap();
+
+        let expected = Node::Element {
+            kind: ElementKind::H1,
+            content: vec![Node::RawText(" Hello There.\nHow are you doing today? ")],
+            attributes: Default::default(),
+        };
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    #[ignore = "don't require quotes for attribute values"]
+    fn element_with_attributes() {
+        let actual = parse_str("~h1(data: test) { with attributes }").unwrap();
+
+        let expected = Node::Element {
+            kind: ElementKind::H1,
+            content: vec![Node::RawText(" with attributes ")],
+            attributes: [("data", "test")].into(),
+        };
+
+        assert_eq!(actual, expected);
     }
 }
