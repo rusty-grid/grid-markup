@@ -144,7 +144,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "don't require quotes for attribute values"]
     fn element_with_attributes() {
         let actual = parse_str("~h1(data: test) { with attributes }").unwrap();
 
