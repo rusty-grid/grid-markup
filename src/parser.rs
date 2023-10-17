@@ -155,4 +155,21 @@ mod tests {
 
         assert_eq!(actual, expected);
     }
+
+    #[test]
+    fn nested_elements() {
+        let actual = parse_str("~div(data: test) {~p{ with attributes }}").unwrap();
+
+        let expected = Node::Element {
+            kind: ElementKind::Div,
+            content: vec![Node::Element {
+                kind: ElementKind::P,
+                content: vec![Node::RawText(" with attributes ")],
+                attributes: Default::default(),
+            }],
+            attributes: [("data", "test")].into(),
+        };
+
+        assert_eq!(actual, expected);
+    }
 }
